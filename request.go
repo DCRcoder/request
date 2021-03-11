@@ -113,7 +113,14 @@ func (r *Request) prepareReq(method, baseURL string, querys map[string]string, b
 	return req, nil
 }
 
+// Reset reset request data
+func (r *Request) Reset() {
+	r.Data = nil
+	r.JSON = nil
+}
+
 func (r *Request) finishReq(res *http.Response) (*Response, error) {
+
 	cookie := res.Cookies()
 	for _, c := range cookie {
 		r.AddCookie(c)
@@ -125,6 +132,7 @@ func (r *Request) finishReq(res *http.Response) (*Response, error) {
 	if err != nil {
 		return nil, err
 	}
+	r.Reset()
 	return &Response{
 		Body:       body,
 		StatusCode: res.StatusCode,

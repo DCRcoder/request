@@ -1,0 +1,22 @@
+run:
+    concurrency: 4
+    timeout: 1m
+    issues-exit-code: 1
+    tests: false
+
+run:
+    skip-dirs:
+        - pkg/script/*
+
+linters:
+    disable-all: true
+    enable:
+        - errcheck
+        - bodyclose
+        - gofmt
+        - varcheck
+        - typecheck
+        - structcheck
+        - ineffassign
+        - staticcheck
+        - govet
