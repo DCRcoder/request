@@ -154,10 +154,12 @@ func ParseQueryURL(baseURL string, querys map[string]string) (string, error) {
 	if err != nil {
 		return "", err
 	}
-	params := url.Values{}
-	for k, v := range querys {
-		params.Set(k, v)
+	if querys != nil {
+		params := url.Values{}
+		for k, v := range querys {
+			params.Set(k, v)
+		}
+		urlParse.RawQuery = params.Encode()
 	}
-	urlParse.RawQuery = params.Encode()
 	return urlParse.String(), nil
 }

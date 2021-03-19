@@ -2,6 +2,7 @@ package request
 
 import (
 	"bytes"
+	"fmt"
 	"io"
 	"io/ioutil"
 	"net/http"
@@ -37,6 +38,7 @@ type Response struct {
 	StatusCode int
 	Header     http.Header
 	Cookie     []*http.Cookie
+	URL        string
 }
 
 // DefaultHeader 默认 header
@@ -47,7 +49,6 @@ var DefaultHeader = map[string]string{
 // NewRequest return new request
 func NewRequest() *Request {
 	return &Request{
-		Header: DefaultHeader,
 		Client: &http.Client{},
 	}
 }
@@ -55,6 +56,10 @@ func NewRequest() *Request {
 // Text return response text
 func (res *Response) Text() string {
 	return string(res.Body)
+}
+
+func (res *Response) Content() []byte {
+	return res.Body
 }
 
 // JSON return json
@@ -115,6 +120,8 @@ func (r *Request) prepareReq(method, baseURL string, querys map[string]string, b
 
 // Reset reset request data
 func (r *Request) Reset() {
+	r.Header = nil
+	r.Cookie = nil
 	r.Data = nil
 	r.JSON = nil
 }
@@ -138,6 +145,7 @@ func (r *Request) finishReq(res *http.Response) (*Response, error) {
 		StatusCode: res.StatusCode,
 		Header:     res.Header,
 		Cookie:     cookie,
+		URL:        res.Request.URL.String(),
 	}, nil
 }
 
@@ -191,6 +199,7 @@ func (r *Request) request(method, baseURL string, querys map[string]string) (*Re
 	if err != nil {
 		return nil, err
 	}
+	fmt.Println()
 	defer resp.Body.Close()
 	return r.finishReq(resp)
 }
