@@ -2,7 +2,6 @@ package request
 
 import (
 	"bytes"
-	"fmt"
 	"io"
 	"io/ioutil"
 	"net/http"
@@ -127,7 +126,6 @@ func (r *Request) Reset() {
 }
 
 func (r *Request) finishReq(res *http.Response) (*Response, error) {
-
 	cookie := res.Cookies()
 	for _, c := range cookie {
 		r.AddCookie(c)
@@ -139,7 +137,6 @@ func (r *Request) finishReq(res *http.Response) (*Response, error) {
 	if err != nil {
 		return nil, err
 	}
-	r.Reset()
 	return &Response{
 		Body:       body,
 		StatusCode: res.StatusCode,
@@ -199,7 +196,6 @@ func (r *Request) request(method, baseURL string, querys map[string]string) (*Re
 	if err != nil {
 		return nil, err
 	}
-	fmt.Println()
 	defer resp.Body.Close()
 	return r.finishReq(resp)
 }
