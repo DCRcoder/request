@@ -23,12 +23,13 @@ var json = jsoniter.Config{
 
 // Request request 实例
 type Request struct {
-	Client *http.Client
-	Header map[string]string
-	Cookie []*http.Cookie
-	Body   io.Reader
-	Data   map[string]string
-	JSON   interface{}
+	Client    *http.Client
+	Header    map[string]string
+	Cookie    []*http.Cookie
+	Body      io.Reader
+	Data      map[string]string
+	JSON      interface{}
+	ForceHttp bool
 }
 
 // Response response 实例
@@ -103,6 +104,9 @@ func (r *Request) prepareReq(method, baseURL string, querys map[string]string, b
 	urlPath, err := ParseQueryURL(baseURL, querys)
 	if err != nil {
 		return nil, err
+	}
+	if r.ForceHttp {
+		urlPath = strings.Replace(urlPath, "https", "http", 1)
 	}
 	req, err := http.NewRequest(method, urlPath, body)
 	if err != nil {
